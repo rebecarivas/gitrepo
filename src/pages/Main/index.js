@@ -1,25 +1,33 @@
 import React, { useState, useCallback } from "react";
 import { Container, Form, Button } from "./styles";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaSpinner } from "react-icons/fa";
 import api from "../../services/api";
 
 function Main() {
   const [newRepo, setNewRepo] = useState("");
   const [repositorios, setRepositorios] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = useCallback(
     (event) => {
       event.preventDefault();
 
       async function submit() {
-        const response = await api.get(`/repos/${newRepo}`);
-        const data = {
-          nome: response.data.full_name,
-        };
+        setLoading(true);
+        try {
+          const response = await api.get(`/repos/${newRepo}`);
+          const data = {
+            nome: response.data.full_name,
+          };
 
-        setRepositorios([...repositorios, data]);
-        setNewRepo("");
-        console.log(repositorios);
+          setRepositorios([...repositorios, data]);
+          setNewRepo("");
+          console.log(repositorios);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false);
+        }
       }
       submit();
     },
@@ -40,8 +48,8 @@ function Main() {
           value={newRepo}
           onChange={handleInputChange}
         />
-        <Button type="submit">
-          <FaPlus />
+        <Button type="submit" Loading={loading ? 1 : 0}>
+          {loading ? <FaSpinner /> : <FaPlus />}
         </Button>
       </Form>
     </Container>

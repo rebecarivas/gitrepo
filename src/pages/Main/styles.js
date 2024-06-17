@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 
 export const Container = styled.main`
   width: 60%;
@@ -25,8 +25,17 @@ export const Form = styled.form`
     font-size: 20px;
   }
 `;
-
-export const Button = styled.button`
+//animação do botão
+const animated = keyframes`
+from{
+    transform: rotate(0deg);
+}to{
+    transform: rotat(360deg);
+}
+`;
+export const Button = styled.button.attrs((props) => ({
+  disabled: props.loading,
+}))`
   border: 2px solid #001f21;
   border-radius: 5px;
   padding: 5px;
@@ -35,4 +44,16 @@ export const Button = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  &[disabled] {
+    cursor: not-allowed;
+  }
+
+  ${(props) =>
+    props.loading &&
+    css`
+      svg {
+        animation: ${animated} 2s linear infinite;
+      }
+    `}
 `;

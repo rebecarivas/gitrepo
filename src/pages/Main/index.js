@@ -8,10 +8,13 @@ function Main() {
   function handleInputChange(event) {
     setNewRepo(event.target.value);
   }
+  function handleSubmit(event) {
+    event.preventDefault();
+  }
   return (
     <Container>
       <h1>GitRepo</h1>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Adicionar repositório"

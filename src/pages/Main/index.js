@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
-import { Container, Form, Button } from "./styles";
-import { FaPlus, FaSpinner } from "react-icons/fa";
+import { Container, Form, Button, List, TrashButton } from "./styles";
+import { FaPlus, FaSpinner, FaBars, FaTrash } from "react-icons/fa";
 import api from "../../services/api";
 
 function Main() {
@@ -17,7 +17,7 @@ function Main() {
         try {
           const response = await api.get(`/repos/${newRepo}`);
           const data = {
-            nome: response.data.full_name,
+            name: response.data.full_name,
           };
 
           setRepositorios([...repositorios, data]);
@@ -31,13 +31,19 @@ function Main() {
       }
       submit();
     },
-    [newRepo, setNewRepo]
+    [newRepo, repositorios]
   );
 
   function handleInputChange(event) {
     setNewRepo(event.target.value);
   }
-
+  const handleTrash = useCallback(
+    (repoName) => {
+      const find = repositorios.filter((r) => r.name !== repoName);
+      setRepositorios(find);
+    },
+    [repositorios]
+  );
   return (
     <Container>
       <h1>GitRepo</h1>
@@ -48,10 +54,24 @@ function Main() {
           value={newRepo}
           onChange={handleInputChange}
         />
-        <Button type="submit" Loading={loading ? 1 : 0}>
+        <Button type="submit" loading={loading ? 1 : 0}>
           {loading ? <FaSpinner /> : <FaPlus />}
         </Button>
       </Form>
+
+      <List>
+        {repositorios.map((repo) => (
+          <li key={repo.name}>
+            {repo.name}{" "}
+            <span>
+              <FaBars />
+              <TrashButton onClick={() => handleTrash(repo.name)} type="button">
+                <FaTrash />
+              </TrashButton>
+            </span>
+          </li>
+        ))}
+      </List>
     </Container>
   );
 }

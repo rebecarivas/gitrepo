@@ -8,7 +8,7 @@ export default createGlobalStyle`
     box-sizing: border-box;
 }
 body{
-    background-color: #001f21;
+    background-color: #029b99;
     font-family: Arial, Helvetica, sans-serif;
 }
 button{

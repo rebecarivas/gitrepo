@@ -2,7 +2,7 @@ import styled, { keyframes, css } from "styled-components";
 
 export const Container = styled.main`
   width: 60%;
-  background-color: #ebe7b7;
+  background-color: #001f21;
   margin: 50px auto;
   padding: 20px;
   border-radius: 5px;
@@ -10,7 +10,7 @@ export const Container = styled.main`
     display: flex;
     justify-content: center;
     font-size: 40px;
-    color: #001f21;
+    color: #ecc039;
   }
 `;
 
@@ -56,4 +56,29 @@ export const Button = styled.button.attrs((props) => ({
         animation: ${animated} 2s linear infinite;
       }
     `}
+`;
+
+export const List = styled.ul`
+  margin-top: 30px;
+  list-style: none;
+  li {
+    color: #001f21;
+    font-size: 20px;
+    background-color: #ebe7b7;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    span {
+      display: flex;
+      align-items: center;
+    }
+  }
+`;
+export const TrashButton = styled.button`
+  background-color: transparent;
+  border: 0;
+  font-size: 20px;
+  padding: 5px;
 `;

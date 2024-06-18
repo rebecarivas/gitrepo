@@ -80,5 +80,11 @@ export const TrashButton = styled.button`
   background-color: transparent;
   border: 0;
   font-size: 20px;
-  padding: 5px;
+`;
+
+export const DetailButton = styled.button`
+  background-color: transparent;
+  border: 0;
+  font-size: 20px;
+  margin-right: 5px;
 `;

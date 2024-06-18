@@ -1,5 +1,12 @@
 import React, { useState, useCallback } from "react";
-import { Container, Form, Button, List, TrashButton } from "./styles";
+import {
+  Container,
+  Form,
+  Button,
+  List,
+  TrashButton,
+  DetailButton,
+} from "./styles";
 import { FaPlus, FaSpinner, FaBars, FaTrash } from "react-icons/fa";
 import api from "../../services/api";
 
@@ -64,7 +71,9 @@ function Main() {
           <li key={repo.name}>
             {repo.name}{" "}
             <span>
-              <FaBars />
+              <DetailButton>
+                <FaBars />
+              </DetailButton>
               <TrashButton onClick={() => handleTrash(repo.name)} type="button">
                 <FaTrash />
               </TrashButton>

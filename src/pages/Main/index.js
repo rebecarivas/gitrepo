@@ -22,6 +22,9 @@ function Main() {
       async function submit() {
         setLoading(true);
         try {
+          if (newRepo === "") {
+            throw new Error("você precisa indicar um repositório válido");
+          }
           const response = await api.get(`/repos/${newRepo}`);
           const data = {
             name: response.data.full_name,

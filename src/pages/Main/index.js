@@ -24,6 +24,7 @@ function Main() {
       async function submit() {
         setLoading(true);
         setAlert(false);
+
         try {
           if (newRepo === "") {
             throw new Error("você precisa indicar um repositório válido");
@@ -33,6 +34,7 @@ function Main() {
           if (hasRepo) {
             throw new Error("Repositório já esxitente na base.");
           }
+
           const response = await api.get(`/repos/${newRepo}`);
           const data = {
             name: response.data.full_name,
@@ -78,7 +80,11 @@ function Main() {
           {loading ? <FaSpinner /> : <FaPlus />}
         </Button>
       </Form>
-      {alert && <AlertMessage>Digite um repositório válido!</AlertMessage>}
+      {alert && (
+        <AlertMessage>
+          Digite um repositório válido e que não esteje na base!
+        </AlertMessage>
+      )}
 
       <List>
         {repositorios.map((repo) => (

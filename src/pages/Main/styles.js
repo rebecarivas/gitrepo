@@ -19,7 +19,7 @@ export const Form = styled.form`
   display: flex;
   input {
     flex: 1;
-    border: 2px solid #001f21;
+    border: 2px solid ${(props) => (props.error ? "red" : "#001f21")};
     border-radius: 5px;
     padding: 5px;
     font-size: 20px;
@@ -87,4 +87,8 @@ export const DetailButton = styled.button`
   border: 0;
   font-size: 20px;
   margin-right: 5px;
+`;
+export const AlertMessage = styled.p`
+  color: #ecc039;
+  margin-top: 5px;
 `;

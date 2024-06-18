@@ -6,6 +6,7 @@ import {
   List,
   TrashButton,
   DetailButton,
+  AlertMessage,
 } from "./styles";
 import { FaPlus, FaSpinner, FaBars, FaTrash } from "react-icons/fa";
 import api from "../../services/api";
@@ -14,6 +15,7 @@ function Main() {
   const [newRepo, setNewRepo] = useState("");
   const [repositorios, setRepositorios] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(false);
 
   const handleSubmit = useCallback(
     (event) => {
@@ -21,9 +23,15 @@ function Main() {
 
       async function submit() {
         setLoading(true);
+        setAlert(false);
         try {
           if (newRepo === "") {
             throw new Error("você precisa indicar um repositório válido");
+          }
+
+          const hasRepo = repositorios.find((repo) => repo.name === newRepo);
+          if (hasRepo) {
+            throw new Error("Repositório já esxitente na base.");
           }
           const response = await api.get(`/repos/${newRepo}`);
           const data = {
@@ -34,6 +42,7 @@ function Main() {
           setNewRepo("");
           console.log(repositorios);
         } catch (error) {
+          setAlert(true);
           console.log(error);
         } finally {
           setLoading(false);
@@ -46,6 +55,7 @@ function Main() {
 
   function handleInputChange(event) {
     setNewRepo(event.target.value);
+    setAlert(false);
   }
   const handleTrash = useCallback(
     (repoName) => {
@@ -57,7 +67,7 @@ function Main() {
   return (
     <Container>
       <h1>GitRepo</h1>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} error={alert}>
         <input
           type="text"
           placeholder="Adicionar repositório"
@@ -68,6 +78,7 @@ function Main() {
           {loading ? <FaSpinner /> : <FaPlus />}
         </Button>
       </Form>
+      {alert && <AlertMessage>Digite um repositório válido!</AlertMessage>}
 
       <List>
         {repositorios.map((repo) => (

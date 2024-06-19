@@ -13,11 +13,25 @@ import api from "../../services/api";
 
 function Main() {
   const [newRepo, setNewRepo] = useState("");
-  const [repositorios, setRepositorios] = useState([]);
+  const [repositorios, setRepositorios] = useState(() => {
+    const repoStorage = localStorage.getItem("repos");
+    return repoStorage ? JSON.parse(repoStorage) : [];
+  });
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(false);
   const [alertHasRepo, setAlertHasRepo] = useState(false);
   const [alertNotFound, setAlertNotFound] = useState(false);
+
+  useEffect(() => {
+    const repoStorage = localStorage.getItem("respos");
+    if (repoStorage) {
+      const repoParse = JSON.parse(repoStorage);
+      setRepositorios(repoParse);
+    }
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("repos", JSON.stringify(repositorios));
+  }, [repositorios]);
 
   const handleSubmit = useCallback(
     (event) => {

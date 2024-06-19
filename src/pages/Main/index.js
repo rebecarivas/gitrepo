@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Container,
   Form,
@@ -16,6 +16,8 @@ function Main() {
   const [repositorios, setRepositorios] = useState([]);
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(false);
+  const [alertHasRepo, setAlertHasRepo] = useState(false);
+  const [alertNotFound, setAlertNotFound] = useState(false);
 
   const handleSubmit = useCallback(
     (event) => {
@@ -24,18 +26,22 @@ function Main() {
       async function submit() {
         setLoading(true);
         setAlert(false);
+        setAlertHasRepo(false);
+        setAlertNotFound(false);
 
         try {
           if (newRepo === "") {
-            throw new Error("você precisa indicar um repositório válido");
+            throw new Error("Você precisa indicar um repositório.");
           }
 
           const hasRepo = repositorios.find((repo) => repo.name === newRepo);
           if (hasRepo) {
-            throw new Error("Repositório já esxitente na base.");
+            setAlertHasRepo(true);
+            return;
           }
 
           const response = await api.get(`/repos/${newRepo}`);
+
           const data = {
             name: response.data.full_name,
           };
@@ -44,8 +50,13 @@ function Main() {
           setNewRepo("");
           console.log(repositorios);
         } catch (error) {
-          setAlert(true);
-          console.log(error);
+          if (error.message === "Você precisa indicar um repositório.") {
+            setAlert(true);
+          } else if (error.response && error.response.request.status === 404) {
+            setAlertNotFound(true);
+          } else {
+            console.log(error);
+          }
         } finally {
           setLoading(false);
         }
@@ -58,6 +69,8 @@ function Main() {
   function handleInputChange(event) {
     setNewRepo(event.target.value);
     setAlert(false);
+    setAlertHasRepo(false);
+    setAlertNotFound(false);
   }
   const handleTrash = useCallback(
     (repoName) => {
@@ -80,10 +93,11 @@ function Main() {
           {loading ? <FaSpinner /> : <FaPlus />}
         </Button>
       </Form>
-      {alert && (
-        <AlertMessage>
-          Digite um repositório válido e que não esteje na base!
-        </AlertMessage>
+      {(alert || alertNotFound) && (
+        <AlertMessage>Digite um repositório válido!</AlertMessage>
+      )}
+      {alertHasRepo && (
+        <AlertMessage>Repositório já existente na base!</AlertMessage>
       )}
 
       <List>

@@ -5,11 +5,11 @@ import {
   Button,
   List,
   TrashButton,
-  DetailButton,
   AlertMessage,
 } from "./styles";
 import { FaPlus, FaSpinner, FaBars, FaTrash } from "react-icons/fa";
 import api from "../../services/api";
+import { Link } from "react-router-dom";
 
 function Main() {
   const [newRepo, setNewRepo] = useState("");
@@ -22,13 +22,6 @@ function Main() {
   const [alertHasRepo, setAlertHasRepo] = useState(false);
   const [alertNotFound, setAlertNotFound] = useState(false);
 
-  useEffect(() => {
-    const repoStorage = localStorage.getItem("respos");
-    if (repoStorage) {
-      const repoParse = JSON.parse(repoStorage);
-      setRepositorios(repoParse);
-    }
-  }, []);
   useEffect(() => {
     localStorage.setItem("repos", JSON.stringify(repositorios));
   }, [repositorios]);
@@ -119,9 +112,9 @@ function Main() {
           <li key={repo.name}>
             {repo.name}{" "}
             <span>
-              <DetailButton>
+              <Link to={`/repositorio/${encodeURIComponent(repo.name)}`}>
                 <FaBars />
-              </DetailButton>
+              </Link>
               <TrashButton onClick={() => handleTrash(repo.name)} type="button">
                 <FaTrash />
               </TrashButton>

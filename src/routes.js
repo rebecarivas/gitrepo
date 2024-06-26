@@ -7,7 +7,9 @@ function RouteComponent() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/repositorio:repositorio" element={<Repositorio />} />
+        <Route path="/repositorio">
+          <Route path=":repositorio" element={<Repositorio />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

@@ -82,12 +82,6 @@ export const TrashButton = styled.button`
   font-size: 20px;
 `;
 
-export const DetailButton = styled.button`
-  background-color: transparent;
-  border: 0;
-  font-size: 20px;
-  margin-right: 5px;
-`;
 export const AlertMessage = styled.p`
   color: #ecc039;
   margin-top: 5px;

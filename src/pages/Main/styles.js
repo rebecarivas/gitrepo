@@ -74,12 +74,19 @@ export const List = styled.ul`
       display: flex;
       align-items: center;
     }
+    a {
+      color: #001f21;
+      :visited {
+        color: #001f21;
+      }
+    }
   }
 `;
 export const TrashButton = styled.button`
   background-color: transparent;
   border: 0;
   font-size: 20px;
+  margin-left: 10px;
 `;
 
 export const AlertMessage = styled.p`

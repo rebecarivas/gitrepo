@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../services/api";
+import {
+  Container,
+  Loading,
+  Header,
+  BackButton,
+  BackButtonContainer,
+} from "./styles";
+import { FaArrowLeft } from "react-icons/fa";
 
-function Repositorio() {
+export default function Repositorio() {
   const [repoOwner, setRepoOwner] = useState({});
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,11 +35,27 @@ function Repositorio() {
 
     requestRepo();
   }, [repositorio]);
+
   return (
     <>
-      <h1 style={{ color: "#fff" }}>Repositório: {repositorio}</h1>
+      <BackButtonContainer>
+        <BackButton to="/">
+          <FaArrowLeft size={30} />
+        </BackButton>
+      </BackButtonContainer>
+      {loading ? (
+        <Loading>
+          <h1>Carregando...</h1>
+        </Loading>
+      ) : (
+        <Container>
+          <Header>
+            <img src={repoOwner.owner.avatar_url} alt={repoOwner.owner.login} />
+            <h1>{repoOwner.name}</h1>
+            <p>{repoOwner.description}</p>
+          </Header>
+        </Container>
+      )}
     </>
   );
 }
-
-export default Repositorio;

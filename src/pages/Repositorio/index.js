@@ -7,6 +7,7 @@ import {
   Header,
   BackButton,
   BackButtonContainer,
+  IssueList,
 } from "./styles";
 import { FaArrowLeft } from "react-icons/fa";
 
@@ -54,6 +55,24 @@ export default function Repositorio() {
             <h1>{repoOwner.name}</h1>
             <p>{repoOwner.description}</p>
           </Header>
+          <IssueList>
+            {issues.map((issue) => (
+              <li key={issue.id}>
+                <img src={issue.user.avatar_url} alt={issue.user.login} />
+                <div>
+                  <strong>
+                    <a href={issue.html_url} target="_blank">
+                      {issue.title}
+                    </a>
+                    {issue.labels.map((label) => (
+                      <span key={label.id}>{label.name}</span>
+                    ))}
+                  </strong>
+                  <p>{issue.user.login}</p>
+                </div>
+              </li>
+            ))}
+          </IssueList>
         </Container>
       )}
     </>

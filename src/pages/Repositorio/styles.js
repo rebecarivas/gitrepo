@@ -48,3 +48,48 @@ export const BackButton = styled(Link)`
     color: #001f21;
   }
 `;
+export const IssueList = styled.ul`
+  margin-top: 30px;
+  list-style: none;
+  li {
+    background-color: #ebe7b7;
+    padding: 15px;
+    display: flex;
+    border-radius: 10px;
+    margin-bottom: 10px;
+
+    img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+    }
+    div {
+      margin-left: 10px;
+      strong {
+        display: flex;
+      }
+      a {
+        color: #001f21;
+        text-decoration: none;
+        transform: 0.3s;
+        :visited {
+          color: #001f21;
+        }
+        &:hover {
+          color: #de4f15;
+        }
+      }
+      span {
+        background-color: #001f21;
+        color: #ebe7b7;
+        padding: 4px;
+        border-radius: 5px;
+        margin-left: 10px;
+      }
+      p {
+        color: #001f21;
+        margin-top: 10px;
+      }
+    }
+  }
+`;

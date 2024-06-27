@@ -8,13 +8,17 @@ import {
   BackButton,
   BackButtonContainer,
   IssueList,
+  Pagination,
 } from "./styles";
 import { FaArrowLeft } from "react-icons/fa";
 
 export default function Repositorio() {
   const [repoOwner, setRepoOwner] = useState({});
   const [issues, setIssues] = useState([]);
+  const [hasIssues, setHasIssues] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+
   const { repositorio } = useParams();
 
   useEffect(() => {
@@ -31,12 +35,32 @@ export default function Repositorio() {
       ]);
       setRepoOwner(repoData.data);
       setIssues(issueData.data);
+      console.log(issueData);
+      console.log(issueData.data);
       setLoading(false);
+      if (issueData.data.length > 0) {
+        setHasIssues(true);
+      }
     }
 
     requestRepo();
   }, [repositorio]);
-
+  useEffect(() => {
+    async function loadIssues() {
+      const response = await api.get(`/repos/${repositorio}/issues`, {
+        params: {
+          state: "open",
+          page: page,
+          per_page: 5,
+        },
+      });
+      setIssues(response.data);
+    }
+    loadIssues();
+  }, [repositorio, page]);
+  function handlePage(action) {
+    setPage(action === "back" ? page - 1 : page + 1);
+  }
   return (
     <>
       <BackButtonContainer>
@@ -73,6 +97,20 @@ export default function Repositorio() {
               </li>
             ))}
           </IssueList>
+          {hasIssues && (
+            <Pagination>
+              <button
+                type="button"
+                onClick={() => handlePage("back")}
+                disabled={page < 2}
+              >
+                Voltar
+              </button>
+              <button type="button" onClick={() => handlePage("next")}>
+                Próxima
+              </button>
+            </Pagination>
+          )}
         </Container>
       )}
     </>

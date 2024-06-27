@@ -9,6 +9,7 @@ import {
   BackButtonContainer,
   IssueList,
   Pagination,
+  ButtonIssues,
 } from "./styles";
 import { FaArrowLeft } from "react-icons/fa";
 
@@ -18,6 +19,16 @@ export default function Repositorio() {
   const [hasIssues, setHasIssues] = useState(false);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState([
+    { state: "all", label: "Todas", active: true },
+    {
+      state: "open",
+      label: "Abertas",
+      active: false,
+    },
+    { state: "closed", label: "Fechadas", active: false },
+  ]);
+  const [filterIndex, setFilterIndex] = useState(0);
 
   const { repositorio } = useParams();
 
@@ -28,15 +39,13 @@ export default function Repositorio() {
         api.get(`/repos/${repositorio}`),
         api.get(`/repos/${repositorio}/issues`, {
           params: {
-            state: "open",
+            state: filters.find((f) => f.active).state,
             per_page: 5,
           },
         }),
       ]);
       setRepoOwner(repoData.data);
       setIssues(issueData.data);
-      console.log(issueData);
-      console.log(issueData.data);
       setLoading(false);
       if (issueData.data.length > 0) {
         setHasIssues(true);
@@ -44,12 +53,13 @@ export default function Repositorio() {
     }
 
     requestRepo();
-  }, [repositorio]);
+  }, [repositorio, filters]);
+
   useEffect(() => {
     async function loadIssues() {
       const response = await api.get(`/repos/${repositorio}/issues`, {
         params: {
-          state: "open",
+          state: filters[filterIndex].state,
           page: page,
           per_page: 5,
         },
@@ -57,9 +67,14 @@ export default function Repositorio() {
       setIssues(response.data);
     }
     loadIssues();
-  }, [repositorio, page]);
+  }, [repositorio, page, filters, filterIndex]);
+
   function handlePage(action) {
     setPage(action === "back" ? page - 1 : page + 1);
+  }
+
+  function handleFilter(index) {
+    setFilterIndex(index);
   }
   return (
     <>
@@ -79,24 +94,38 @@ export default function Repositorio() {
             <h1>{repoOwner.name}</h1>
             <p>{repoOwner.description}</p>
           </Header>
-          <IssueList>
-            {issues.map((issue) => (
-              <li key={issue.id}>
-                <img src={issue.user.avatar_url} alt={issue.user.login} />
-                <div>
-                  <strong>
-                    <a href={issue.html_url} target="_blank">
-                      {issue.title}
-                    </a>
-                    {issue.labels.map((label) => (
-                      <span key={label.id}>{label.name}</span>
-                    ))}
-                  </strong>
-                  <p>{issue.user.login}</p>
-                </div>
-              </li>
+          <ButtonIssues active={filterIndex}>
+            {filters.map((filter, index) => (
+              <button
+                type="button"
+                key={filter.label}
+                onClick={() => handleFilter(index)}
+              >
+                {filter.label}
+              </button>
             ))}
-          </IssueList>
+          </ButtonIssues>
+          {hasIssues && (
+            <IssueList>
+              {issues.map((issue) => (
+                <li key={issue.id}>
+                  <img src={issue.user.avatar_url} alt={issue.user.login} />
+                  <div>
+                    <strong>
+                      <a href={issue.html_url} target="_blank">
+                        {issue.title}
+                      </a>
+                      {issue.labels.map((label) => (
+                        <span key={label.id}>{label.name}</span>
+                      ))}
+                    </strong>
+                    <p>{issue.user.login}</p>
+                  </div>
+                </li>
+              ))}
+            </IssueList>
+          )}
+
           {hasIssues && (
             <Pagination>
               <button

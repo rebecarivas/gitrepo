@@ -108,3 +108,20 @@ export const Pagination = styled.div`
     }
   }
 `;
+export const ButtonIssues = styled.div`
+  margin: 15px 0;
+  button {
+    outline: 0;
+    border: 0;
+    padding: 8px;
+    border-radius: 4px;
+    margin: 0 3px;
+    color: #001f21;
+
+    &:nth-child(${(props) => props.active + 1}) {
+      background: #ecc039;
+      color: #001f21;
+      font-weight: bold;
+    }
+  }
+`;

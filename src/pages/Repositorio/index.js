@@ -29,6 +29,7 @@ export default function Repositorio() {
     { state: "closed", label: "Fechadas", active: false },
   ]);
   const [filterIndex, setFilterIndex] = useState(0);
+  const [hasNoPagination, setHasNoPagination] = useState(false);
 
   const { repositorio } = useParams();
 
@@ -65,6 +66,9 @@ export default function Repositorio() {
         },
       });
       setIssues(response.data);
+      if (response.data.length === 0) {
+        setHasNoPagination(true);
+      }
     }
     loadIssues();
   }, [repositorio, page, filters, filterIndex]);
@@ -94,17 +98,19 @@ export default function Repositorio() {
             <h1>{repoOwner.name}</h1>
             <p>{repoOwner.description}</p>
           </Header>
-          <ButtonIssues active={filterIndex}>
-            {filters.map((filter, index) => (
-              <button
-                type="button"
-                key={filter.label}
-                onClick={() => handleFilter(index)}
-              >
-                {filter.label}
-              </button>
-            ))}
-          </ButtonIssues>
+          {hasIssues && (
+            <ButtonIssues active={filterIndex}>
+              {filters.map((filter, index) => (
+                <button
+                  type="button"
+                  key={filter.label}
+                  onClick={() => handleFilter(index)}
+                >
+                  {filter.label}
+                </button>
+              ))}
+            </ButtonIssues>
+          )}
           {hasIssues && (
             <IssueList>
               {issues.map((issue) => (
@@ -135,7 +141,11 @@ export default function Repositorio() {
               >
                 Voltar
               </button>
-              <button type="button" onClick={() => handlePage("next")}>
+              <button
+                type="button"
+                disabled={hasNoPagination}
+                onClick={() => handlePage("next")}
+              >
                 Próxima
               </button>
             </Pagination>
